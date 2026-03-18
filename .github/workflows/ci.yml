@@ -3,7 +3,6 @@ name: CI Pipeline
 on:
   workflow_dispatch:
 
-
 permissions:
   contents: read
 
@@ -193,7 +192,7 @@ jobs:
         env:
           APP_RELEASE_STORE_PASSWORD: dummy-ci-password
           APP_RELEASE_KEY_PASSWORD: dummy-ci-password
-        run: ./gradlew assembleRelease
+        run: bash ./gradlew assembleRelease
 
       - name: Upload Android APK
         uses: actions/upload-artifact@v4
@@ -203,7 +202,7 @@ jobs:
 
   # Job for iOS build
   build-ios:
-    runs-on: macos-15  # macOS 15 with Xcode 16
+    runs-on: macos-15 # macOS 15 with Xcode 16
     needs: [build-and-test, detect-changes]
     if: needs.detect-changes.outputs.translation_only != 'true'
     steps:
@@ -229,7 +228,7 @@ jobs:
 
       - name: Install dependencies
         run: yarn install
-      
+
       - name: Create Env.xcconfig
         run: |
           cat > ios/Config/Env.xcconfig << 'EOL'
