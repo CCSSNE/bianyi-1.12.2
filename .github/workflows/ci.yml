@@ -310,19 +310,28 @@ jobs:
       - name: Install xcpretty
         run: gem install xcpretty
 
-      - name: Build iOS Release
+      - name: Build iOS Release IPA
         run: |
           cd ios
-          # List available simulators for debugging
-          xcrun simctl list devices available
-          set -o pipefail && xcodebuild \
-            -workspace PocketPal.xcworkspace \
+          set -o pipefail && xcodebuild -workspace PocketPal.xcworkspace \
             -scheme PocketPal \
             -configuration Release \
-            -sdk iphonesimulator \
-            -destination 'generic/platform=iOS Simulator' \
+            -sdk iphoneos \
+            -archivePath build/PocketPal.xcarchive \
+            archive \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO \
-            ONLY_ACTIVE_ARCH=NO \
             | xcpretty
+
+          # Create IPA from archive
+          mkdir -p build/Payload
+          cp -r build/PocketPal.xcarchive/Products/Applications/PocketPal.app build/Payload/
+          cd build
+          zip -q -r PocketPal.ipa Payload
+
+      - name: Upload iOS IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-release-ipa
+          path: ios/build/PocketPal.ipa
