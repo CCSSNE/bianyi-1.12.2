@@ -1,49 +1,23 @@
-测试出来是其他都正常，只是 pal 广场和登录是用不了的
+**This repository focuses solely on compilation compatibility, enabling the source code to directly build IPA and APK files within the action.**
 
-因为原版的 release.yml 也不是写死的，而是从 GitHub Actions 配置里取：
+Testing revealed that everything else works normally; only the PAL Square and login features are unusable. Since the original release.yml is not hardcoded but retrieves configuration from GitHub Actions:
 
 SUPABASE_URL=${{ vars.SUPABASE_URL }}
 
 SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}
 
-PALSHUB_API_BASE_URL=${{ vars.PALSHUB_API_BASE_URL }}
-
-
+PALSHUB_API_BASE_URL=${{ vars.PALSHUB_API_BASE_URL }}%%
 
 **PALSHUB_API_BASE_URL**
+I know the official value is https://palshub.ai; it directly determines the base URL for the public Pals API. This can be easily filled in, but this repository will not fill it because its goal is only to make compilation possible. My actual forked repository includes this fix. The reasons are as follows:
 
-我知道官方值就是 https://palshub.ai
+1. The official site is indeed https://palshub.ai Source: PalsHub website
 
-它直接决定公开 Pals API 基址
-
-所以先补它，风险最低、指向最强
-
-官方站点本身就是 https://palshub.ai
-
-来源：PalsHub 官网
-
-它首页明确写的是 “AI Pals for PocketPal AI”，这是官方公开站点。
-
-原版公开仓库的 .env.example 把默认值直接写成了 PALSHUB_API_BASE_URL=https://palshub.ai
-
-来源：a-ghorbani/pocketpal-ai/.env.example
-
-
+3. Its homepage clearly states “AI Pals for PocketPal AI,” which is the official public site. In the original open repository, .env.example directly sets the default value to PALSHUB_API_BASE_URL=https://palshub.ai Source: a-ghorbani/pocketpal-ai/.env.example
 
 **SUPABASE_URL**
-
-我虽然知道它“应该是某个 Supabase 项目地址”
-
-但我不知道原版真实在用哪个项目
-
-.env.example 里只有占位符：https://your-project.supabase.co
-
-这不是可用真实值，所以我不能瞎回退
-
-
+Although I know it “should be” a certain Supabase project address, I don’t know which exact project the original version is using. The .env.example only contains a placeholder: https://your-project.supabase.co. Since this is not an actual value, I cannot guess blindly.
 
 **SUPABASE_ANON_KEY**
-
-同理，我也不知道真实值
-
-更不能乱写
+Similarly, I don’t know the true value either and cannot write it randomly by guessing.
+You can decompile the official released APK to find these hidden parameters and recover the login functionality.
